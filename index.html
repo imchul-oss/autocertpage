@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<title>AIM 상장</title>
+<style id="printPageRule">@page{size:A4 landscape;margin:0}</style>
+<style>
+  @font-face { font-family:"GT Planar"; src:url("fonts/GT-Planar-Regular.woff2") format("woff2"); font-weight:400; font-style:normal; font-display:swap; }
+  @font-face { font-family:"GT Planar"; src:url("fonts/GT-Planar-Medium.woff2") format("woff2"); font-weight:500; font-style:normal; font-display:swap; }
+  @font-face { font-family:"Pretendard"; src:url("fonts/Pretendard-Regular.woff2") format("woff2"); font-weight:400; font-style:normal; font-display:swap; }
+  @font-face { font-family:"Pretendard"; src:url("fonts/Pretendard-Medium.woff2") format("woff2"); font-weight:500; font-style:normal; font-display:swap; }
+  @font-face { font-family:"Pretendard"; src:url("fonts/Pretendard-SemiBold.woff2") format("woff2"); font-weight:600; font-style:normal; font-display:swap; }
+  @font-face { font-family:"Pretendard"; src:url("fonts/Pretendard-Bold.woff2") format("woff2"); font-weight:700; font-style:normal; font-display:swap; }
+
+  :root {
+    --aim-dark:#4F4F4F; --aim-ink:#2F2F2F; --mint:#4DD2A7; --mint-2:#3ABF94;
+    --gray-2:#717171; --gray-3:#A8A8A8; --gray-4:#DEDEDE; --paper:#FFFFFF; --bg:#EAEAEA;
+    --ff-kr: "Pretendard", -apple-system, BlinkMacSystemFont, "Malgun Gothic", sans-serif;
+    --ff-en: "GT Planar", "Pretendard", -apple-system, BlinkMacSystemFont, sans-serif;
+    --gap-header: 6; --gap-title-top: 4; --gap-title-bottom: 5; --gap-tag-bottom: 9;
+    --gap-recipient: 7; --gap-rcpt-name: 16; --gap-rcpt-rows: 48; --gap-rcpt-aff: 16;
+    --gap-body: 9; --gap-date: 9; --gap-org: 7; --stamp-size: 28;
+    --ob-inset: 9; --border-gap: 2; --ob-width: 2.4; --ob-color: #4F4F4F; --ib-width: 1; --ib-color: #4DD2A7;
+    --logo-h: 22;
+    --fs-issue: 12; --fs-title: 96; --fs-tag: 11.5; --fs-name: 28; --fs-aff: 16;
+    --fs-body: 15.5; --fs-date: 17; --fs-org-name: 22; --fs-role: 13; --fs-signer: 17;
+    --ls-issue: 0.04; --ls-title: 0.04; --ls-tag: 0.32; --ls-name: 0.18; --ls-aff: 0.04;
+    --ls-body: 0.01; --ls-date: 0.04; --ls-org: 0.18; --ls-role: 0.18; --ls-signer: 0.30;
+    --al-title: center; --al-tag: center; --al-rcpt: center; --al-body: center;
+    --al-date: center; --al-org: center; --al-signer: center;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; }
+  body { background: var(--bg); font-family: var(--ff-kr); color: var(--aim-dark); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+
+  .toolbar { position: fixed; top: 20px; right: 20px; z-index: 50; display: flex; align-items: center; gap: 8px;
+    background: var(--aim-ink); border-radius: 999px; padding: 6px; box-shadow: 0 10px 30px rgba(47,47,47,.22);
+    max-width: calc(100vw - 40px); flex-wrap: wrap; }
+  .toolbar button { appearance: none; border: none; background: transparent; color: #fff; font-family: var(--ff-en);
+    font-size: 11.5px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500; padding: 10px 15px;
+    border-radius: 999px; cursor: pointer; transition: background 160ms; display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
+  .toolbar button:hover { background: rgba(255,255,255,.08); }
+  .toolbar button.primary { background: var(--mint); color: var(--aim-ink); }
+  .toolbar button.primary:hover { background: var(--mint-2); color: #fff; }
+  .toolbar .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--mint); }
+  .toolbar button.primary .dot { background: var(--aim-ink); }
+  .toolbar .sep { width: 1px; align-self: stretch; margin: 4px 1px; background: rgba(255,255,255,.16); }
+  .toolbar .grp-pages { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,.06); border-radius: 999px; padding: 3px 4px 3px 12px; }
+  .toolbar .grp-pages .lbl { color: rgba(255,255,255,.7); font-family: var(--ff-en); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; }
+  .toolbar .grp-pages input[type="number"] { width: 46px; text-align: center; border: none; border-radius: 999px; padding: 7px 6px;
+    background: rgba(255,255,255,.12); color: #fff; font-family: var(--ff-en); font-size: 12px; font-variant-numeric: tabular-nums; }
+  .toolbar .grp-pages input[type="number"]:focus { outline: 2px solid var(--mint); }
+
+  .hint { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 50; background: rgba(47,47,47,.92); color: #fff;
+    font-size: 12px; letter-spacing: 0.04em; padding: 10px 18px; border-radius: 999px; backdrop-filter: blur(8px); font-family: var(--ff-kr); }
+  .hint b { color: var(--mint); font-weight: 600; margin: 0 4px; }
+
+  .panel { position: fixed; top: 90px; right: 20px; z-index: 49; width: 286px; max-height: calc(100vh - 110px); overflow-y: auto;
+    background: #fff; border: 1px solid var(--gray-4); border-radius: 16px; padding: 10px 16px 14px; box-shadow: 0 20px 50px rgba(47,47,47,.18);
+    transform: translateX(calc(100% + 40px)); transition: transform 280ms cubic-bezier(.2,.7,.2,1); font-family: var(--ff-kr); }
+  .panel.open { transform: translateX(0); }
+  .panel .panel-title { font-family: var(--ff-en); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gray-2); padding: 8px 2px 10px; }
+  .grp { border-top: 1px solid var(--gray-4); }
+  .grp > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; padding: 12px 2px; font-size: 13px; font-weight: 600; color: var(--aim-ink); }
+  .grp > summary::-webkit-details-marker { display: none; }
+  .grp > summary .chev { width: 8px; height: 8px; border-right: 1.5px solid var(--gray-2); border-bottom: 1.5px solid var(--gray-2); transform: rotate(45deg); transition: transform 180ms; margin-right: 4px; }
+  .grp[open] > summary .chev { transform: rotate(-135deg); }
+  .grp .grp-body { padding: 2px 0 12px; }
+  .grp .grp-reset { display: flex; justify-content: flex-end; margin: -4px 0 2px; }
+  .grp .grp-reset button { appearance: none; border: none; background: transparent; color: var(--gray-2); font-family: inherit; font-size: 11px; letter-spacing: 0.04em; cursor: pointer; padding: 0; }
+  .grp .grp-reset button:hover { color: var(--mint-2); }
+  .ctrl { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 8px; padding: 7px 0; }
+  .ctrl label { font-size: 12px; color: var(--aim-dark); font-weight: 500; }
+  .ctrl .val { font-family: var(--ff-en); font-size: 11px; color: var(--gray-2); font-variant-numeric: tabular-nums; min-width: 44px; text-align: right; }
+  .ctrl input[type="range"] { grid-column: 1 / -1; width: 100%; -webkit-appearance: none; appearance: none; height: 3px; background: var(--gray-4); border-radius: 2px; outline: none; margin: 4px 0 2px; }
+  .ctrl input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; background: var(--mint); border-radius: 50%; cursor: pointer; border: 2px solid #fff; box-shadow: 0 1px 4px rgba(47,47,47,.2); }
+  .ctrl input[type="range"]::-moz-range-thumb { width: 14px; height: 14px; background: var(--mint); border-radius: 50%; cursor: pointer; border: 2px solid #fff; }
+  .ctrl.color input[type="color"] { width: 30px; height: 22px; padding: 0; border: 1px solid var(--gray-4); border-radius: 6px; background: none; cursor: pointer; }
+  .panel .btn { appearance: none; cursor: pointer; border: 1px solid var(--gray-4); background: #fff; color: var(--aim-ink); font-family: var(--ff-kr); font-size: 12px; font-weight: 500; padding: 8px 12px; border-radius: 9px; transition: background 140ms, border-color 140ms; }
+  .panel .btn:hover { border-color: var(--mint-2); color: var(--mint-2); }
+  .panel .btn.full { width: 100%; }
+  .panel .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 6px 0; }
+  .panel .note { font-size: 11px; color: var(--gray-2); line-height: 1.5; padding: 4px 0 0; }
+
+  .inspector { position: fixed; z-index: 60; width: 224px; background: #fff; border: 1px solid var(--gray-4); border-radius: 12px; padding: 12px 14px 13px; box-shadow: 0 14px 40px rgba(47,47,47,.22); font-family: var(--ff-kr); }
+  .inspector[hidden] { display: none; }
+  .inspector .insp-title { font-size: 12px; font-weight: 700; color: var(--aim-ink); display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+  .inspector .insp-title::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--mint); }
+  .inspector .insp-row { padding: 5px 0; }
+  .inspector .insp-row .top { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--aim-dark); }
+  .inspector .insp-row .v { font-family: var(--ff-en); font-size: 11px; color: var(--gray-2); font-variant-numeric: tabular-nums; }
+  .inspector input[type="range"] { width: 100%; -webkit-appearance: none; appearance: none; height: 3px; background: var(--gray-4); border-radius: 2px; outline: none; margin: 6px 0 0; }
+  .inspector input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; background: var(--mint); border-radius: 50%; cursor: pointer; border: 2px solid #fff; box-shadow: 0 1px 4px rgba(47,47,47,.2); }
+  .inspector input[type="range"]::-moz-range-thumb { width: 14px; height: 14px; background: var(--mint); border-radius: 50%; cursor: pointer; border: 2px solid #fff; }
+  .inspector .seg { display: grid; grid-template-columns: repeat(3,1fr); gap: 4px; margin-top: 6px; }
+  .inspector .seg button { appearance: none; cursor: pointer; border: 1px solid var(--gray-4); background: #fff; color: var(--gray-2); font-family: var(--ff-kr); font-size: 12px; padding: 6px 0; border-radius: 7px; transition: all 120ms; }
+  .inspector .seg button:hover { border-color: var(--mint-2); color: var(--mint-2); }
+  .inspector .seg button.active { background: var(--mint); border-color: var(--mint); color: var(--aim-ink); font-weight: 600; }
+  .inspector .insp-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+  .inspector .insp-foot button { appearance: none; border: none; background: transparent; cursor: pointer; color: var(--gray-2); font-family: inherit; font-size: 11px; padding: 0; }
+  .inspector .insp-foot button:hover { color: var(--mint-2); }
+
+  .stage { display: flex; flex-direction: column; align-items: center; gap: 44px; padding: 56px 20px 72px; }
+  .page { width: 297mm; height: 210mm; background: var(--paper); position: relative; box-shadow: 0 30px 80px rgba(47,47,47,.18), 0 2px 6px rgba(47,47,47,.08); overflow: hidden; padding: 14mm; display: flex; flex-direction: column; }
+  .stage.portrait .page { width: 210mm; height: 297mm; }
+  .page::before { content: ""; position: absolute; inset: calc(var(--ob-inset) * 1mm); border: calc(var(--ob-width) * 1px) solid var(--ob-color); pointer-events: none; }
+  .page::after { content: ""; position: absolute; inset: calc((var(--ob-inset) + var(--border-gap)) * 1mm); border: calc(var(--ib-width) * 1px) solid var(--ib-color); pointer-events: none; }
+  .page.active-page { box-shadow: 0 0 0 3px var(--mint), 0 30px 80px rgba(47,47,47,.18), 0 2px 6px rgba(47,47,47,.08); }
+  .page-badge { position: absolute; top: 8px; left: 8px; z-index: 6; background: var(--aim-ink); color: #fff; font-family: var(--ff-en); font-size: 11px; letter-spacing: 0.1em; padding: 4px 11px; border-radius: 999px; opacity: .82; pointer-events: none; font-variant-numeric: tabular-nums; }
+  .inner { flex: 1; display: flex; flex-direction: column; padding: 8mm 16mm; position: relative; z-index: 1; }
+
+  .head { display: flex; justify-content: space-between; align-items: center; margin-bottom: calc(var(--gap-header) * 1mm); }
+  .head .brand { display: flex; align-items: center; color: var(--aim-dark); }
+  .head .brand svg, .head .brand img.brand-img { display: block; height: calc(var(--logo-h) * 1px); width: auto; }
+  .head .brand img.brand-img { object-fit: contain; max-width: 120mm; }
+  .head .issue { color: var(--gray-2); font-family: var(--ff-en); font-size: calc(var(--fs-issue) * 1px); letter-spacing: calc(var(--ls-issue) * 1em); }
+
+  .title-wrap { text-align: center; margin-top: calc(var(--gap-title-top) * 1mm); }
+  .title { font-family: var(--ff-kr); font-size: calc(var(--fs-title) * 1px); color: var(--aim-ink); font-weight: 700; letter-spacing: calc(var(--ls-title) * 1em); text-align: var(--al-title); line-height: 1; margin: 0; }
+  .tag { margin-top: calc(var(--gap-title-bottom) * 1mm); font-family: var(--ff-en); font-size: calc(var(--fs-tag) * 1px); letter-spacing: calc(var(--ls-tag) * 1em); text-align: var(--al-tag); color: var(--mint-2); font-weight: 500; text-transform: uppercase; }
+  .dots { margin: calc(var(--gap-tag-bottom) * 1mm) auto 0; display: flex; gap: 9px; align-items: center; width: fit-content; }
+  .dots span { width: 5px; height: 5px; border-radius: 50%; background: var(--gray-4); }
+  .dots span.mint { background: var(--mint); }
+
+  .rcpt { margin-top: calc(var(--gap-recipient) * 1mm); text-align: var(--al-rcpt); line-height: 1; }
+  .rcpt .row { display: inline-flex; align-items: baseline; }
+  .rcpt .name { margin-left: calc(var(--gap-rcpt-name) * 1px); }
+  .rcpt .sep  { display: inline-block; width: calc(var(--gap-rcpt-rows) * 1px); }
+  .rcpt .aff  { margin-left: calc(var(--gap-rcpt-aff) * 1px); }
+  .rcpt .label { color: var(--gray-2); font-family: var(--ff-kr); font-weight: 500; font-size: 13px; letter-spacing: 0.18em; white-space: nowrap; }
+  .rcpt .name { font-family: var(--ff-kr); font-size: calc(var(--fs-name) * 1px); color: var(--aim-ink); font-weight: 700; letter-spacing: calc(var(--ls-name) * 1em); }
+  .rcpt .aff { font-family: var(--ff-kr); font-size: calc(var(--fs-aff) * 1px); color: var(--aim-ink); font-weight: 700; letter-spacing: calc(var(--ls-aff) * 1em); }
+
+  .body { margin: calc(var(--gap-body) * 1mm) 25mm 0; text-align: var(--al-body); font-family: var(--ff-kr); font-size: calc(var(--fs-body) * 1px); line-height: 1.95; color: var(--aim-dark); font-weight: 400; text-wrap: pretty; letter-spacing: calc(var(--ls-body) * 1em); }
+
+  .date { margin-top: calc(var(--gap-date) * 1mm); text-align: var(--al-date); font-family: var(--ff-kr); font-size: calc(var(--fs-date) * 1px); color: var(--aim-ink); font-weight: 600; letter-spacing: calc(var(--ls-date) * 1em); }
+  .org { margin-top: calc(var(--gap-org) * 1mm); text-align: var(--al-signer); }
+  .org .name { font-family: var(--ff-en); font-size: calc(var(--fs-org-name) * 1px); color: var(--aim-ink); font-weight: 500; letter-spacing: calc(var(--ls-org) * 1em); text-align: var(--al-org); }
+  .org .signer { margin-top: 10px; display: inline-flex; align-items: center; gap: 14px; font-size: 13px; color: var(--gray-2); letter-spacing: 0.04em; position: relative; }
+  .org .signer .role { font-family: var(--ff-kr); font-weight: 500; letter-spacing: calc(var(--ls-role) * 1em); font-size: calc(var(--fs-role) * 1px); }
+  .org .signer .who { font-family: var(--ff-kr); color: var(--aim-ink); font-weight: 700; font-size: calc(var(--fs-signer) * 1px); letter-spacing: calc(var(--ls-signer) * 1em); }
+
+  .stamp { position: absolute; z-index: 5; width: 28mm; height: 28mm; user-select: none; -webkit-user-drag: none; transition: box-shadow 160ms; }
+  .stamp.empty { border: 1.5px dashed var(--gray-3); background: rgba(77, 210, 167, 0.04); display: flex; align-items: center; justify-content: center; color: var(--gray-2); font-family: var(--ff-kr); font-size: 12px; letter-spacing: 0.18em; cursor: pointer; }
+  .stamp.empty::before { content: ""; position: absolute; inset: 4px; border: 1px solid var(--gray-4); pointer-events: none; }
+  .stamp.empty:hover { border-color: var(--mint-2); color: var(--mint-2); background: rgba(77, 210, 167, 0.10); }
+  .stamp.dragover { border-color: var(--mint); background: rgba(77, 210, 167, 0.18); }
+  .stamp.filled { cursor: move; }
+  .stamp.filled img { width: 100%; height: 100%; object-fit: contain; display: block; pointer-events: none; -webkit-user-drag: none; }
+  .stamp.filled:hover { box-shadow: 0 0 0 2px var(--mint), 0 6px 18px rgba(47,47,47,.12); }
+  .stamp.filled .stamp-placeholder { display: none; }
+  .stamp.filled::before { display: none; }
+  .stamp .stamp-menu { position: absolute; top: -34px; right: 0; display: none; gap: 4px; background: var(--aim-ink); border-radius: 999px; padding: 4px; box-shadow: 0 6px 18px rgba(47,47,47,.22); }
+  .stamp.filled:hover .stamp-menu { display: flex; }
+  .stamp .stamp-menu button { appearance: none; border: none; background: transparent; color: #fff; font-family: var(--ff-en); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500; padding: 5px 10px; border-radius: 999px; cursor: pointer; }
+  .stamp .stamp-menu button:hover { background: rgba(255,255,255,.12); }
+  .stamp .stamp-menu button.danger:hover { background: #B83A2C; }
+  .stamp input[type="file"] { display: none; }
+
+  [contenteditable="true"] { outline: none; border-radius: 4px; transition: background 140ms, box-shadow 140ms; padding: 0 2px; cursor: text; }
+  [contenteditable="true"]:hover { background: rgba(77, 210, 167, 0.10); box-shadow: 0 0 0 2px rgba(77, 210, 167, 0.18); }
+  [contenteditable="true"]:focus { background: rgba(77, 210, 167, 0.16); box-shadow: 0 0 0 2px var(--mint); }
+
+  #csvInput, #logoInput { display: none; }
+
+  @media print {
+    body { background: #fff; }
+    .toolbar, .hint, .panel, .inspector { display: none !important; }
+    .stage { padding: 0; gap: 0; }
+    .page { box-shadow: none; margin: 0; break-after: page; page-break-after: always; }
+    .page:last-child { break-after: auto; page-break-after: auto; }
+    .page.active-page { box-shadow: none !important; }
+    .page-badge { display: none !important; }
+    [contenteditable="true"]:hover, [contenteditable="true"]:focus { background: transparent; box-shadow: none; }
+    .stamp.empty { display: none !important; }
+    .stamp .stamp-menu { display: none !important; }
+    .stamp.filled { box-shadow: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar" aria-label="문서 도구">
+  <button class="primary" onclick="window.print()" title="브라우저 인쇄 → PDF로 저장"><span class="dot"></span>PDF로 저장</button>
+  <span class="sep" aria-hidden="true"></span>
+  <span class="grp-pages">
+    <span class="lbl">Pages</span>
+    <input id="copyCount" type="number" min="1" max="200" value="1" title="한 번에 추가할 장수" />
+    <button onclick="addPages(parseInt(document.getElementById('copyCount').value,10))" title="활성 페이지를 입력한 장수만큼 복제"><span class="dot"></span>복제 추가</button>
+    <button onclick="deletePage()" title="활성 페이지 삭제 (한 장만 남으면 초기화)">삭제</button>
+  </span>
+  <span class="sep" aria-hidden="true"></span>
+  <button onclick="document.getElementById('csvInput').click()" title="CSV 명단으로 페이지 일괄 생성"><span class="dot"></span>CSV 불러오기</button>
+  <button onclick="downloadSampleCSV()" title="작성용 예시 CSV 내려받기">예시 CSV</button>
+  <span class="sep" aria-hidden="true"></span>
+  <button onclick="togglePanel()" title="전역 조절 패널 (모든 페이지 공통)"><span class="dot"></span>조절</button>
+  <button onclick="lockAll()" title="모든 편집 영역 잠그기">잠금</button>
+  <button onclick="resetAll()" title="초기 내용으로">초기화</button>
+</div>
+
+<input id="csvInput" type="file" accept=".csv,text/csv" />
+<input id="logoInput" type="file" accept="image/*" />
+
+<aside class="panel" id="panel" aria-label="조절 패널">
+  <div class="panel-title">Global controls</div>
+  <details class="grp" open>
+    <summary><span style="display:flex;align-items:center;gap:8px"><span class="chev"></span>레이아웃 · 간격</span></summary>
+    <div class="grp-body">
+      <div class="grp-reset"><button onclick="resetGroup('layout')">기본값으로</button></div>
+      <div class="ctrl"><label>헤더 ↓ 제목</label><span class="val" data-out="--gap-header"></span><input type="range" min="-20" max="80" step="0.5" data-var="--gap-header" data-unit="mm"/></div>
+      <div class="ctrl"><label>제목 위쪽</label><span class="val" data-out="--gap-title-top"></span><input type="range" min="-20" max="80" step="0.5" data-var="--gap-title-top" data-unit="mm"/></div>
+      <div class="ctrl"><label>제목 ↓ 부제</label><span class="val" data-out="--gap-title-bottom"></span><input type="range" min="-20" max="60" step="0.5" data-var="--gap-title-bottom" data-unit="mm"/></div>
+      <div class="ctrl"><label>부제 ↓ 도트</label><span class="val" data-out="--gap-tag-bottom"></span><input type="range" min="-20" max="60" step="0.5" data-var="--gap-tag-bottom" data-unit="mm"/></div>
+      <div class="ctrl"><label>↓ 수상자</label><span class="val" data-out="--gap-recipient"></span><input type="range" min="-20" max="80" step="0.5" data-var="--gap-recipient" data-unit="mm"/></div>
+      <div class="ctrl"><label>성명 ↔ 내용</label><span class="val" data-out="--gap-rcpt-name"></span><input type="range" min="-40" max="240" step="1" data-var="--gap-rcpt-name" data-unit="px"/></div>
+      <div class="ctrl"><label>성명 ↔ 소속 간격</label><span class="val" data-out="--gap-rcpt-rows"></span><input type="range" min="-40" max="500" step="1" data-var="--gap-rcpt-rows" data-unit="px"/></div>
+      <div class="ctrl"><label>소속 ↔ 내용</label><span class="val" data-out="--gap-rcpt-aff"></span><input type="range" min="-40" max="240" step="1" data-var="--gap-rcpt-aff" data-unit="px"/></div>
+      <div class="ctrl"><label>↓ 본문</label><span class="val" data-out="--gap-body"></span><input type="range" min="-20" max="80" step="0.5" data-var="--gap-body" data-unit="mm"/></div>
+      <div class="ctrl"><label>↓ 일자</label><span class="val" data-out="--gap-date"></span><input type="range" min="-20" max="80" step="0.5" data-var="--gap-date" data-unit="mm"/></div>
+      <div class="ctrl"><label>↓ 발급기관</label><span class="val" data-out="--gap-org"></span><input type="range" min="-20" max="80" step="0.5" data-var="--gap-org" data-unit="mm"/></div>
+      <div class="ctrl"><label>도장 크기</label><span class="val" data-out="--stamp-size"></span><input type="range" min="8" max="120" step="0.5" data-var="--stamp-size" data-unit="mm"/></div>
+    </div>
+  </details>
+  <details class="grp">
+    <summary><span style="display:flex;align-items:center;gap:8px"><span class="chev"></span>외곽선 (이중 테두리)</span></summary>
+    <div class="grp-body">
+      <div class="grp-reset"><button onclick="resetGroup('border')">기본값으로</button></div>
+      <div class="ctrl"><label>바깥선 굵기</label><span class="val" data-out="--ob-width"></span><input type="range" min="0" max="12" step="0.1" data-var="--ob-width" data-unit="px"/></div>
+      <div class="ctrl color"><label>바깥선 색</label><input type="color" data-var="--ob-color" data-type="color"/></div>
+      <div class="ctrl"><label>안쪽선 굵기</label><span class="val" data-out="--ib-width"></span><input type="range" min="0" max="12" step="0.1" data-var="--ib-width" data-unit="px"/></div>
+      <div class="ctrl color"><label>안쪽선 색</label><input type="color" data-var="--ib-color" data-type="color"/></div>
+      <div class="ctrl"><label>가장자리 여백</label><span class="val" data-out="--ob-inset"></span><input type="range" min="2" max="24" step="0.5" data-var="--ob-inset" data-unit="mm"/></div>
+      <div class="ctrl"><label>두 선 사이 간격</label><span class="val" data-out="--border-gap"></span><input type="range" min="0" max="20" step="0.5" data-var="--border-gap" data-unit="mm"/></div>
+    </div>
+  </details>
+  <details class="grp">
+    <summary><span style="display:flex;align-items:center;gap:8px"><span class="chev"></span>페이지 · 브랜드</span></summary>
+    <div class="grp-body">
+      <div class="row2">
+        <button class="btn" id="btnOrient" onclick="toggleOrient()">가로 ▸ 세로로</button>
+        <button class="btn" onclick="document.getElementById('logoInput').click()">로고 업로드</button>
+      </div>
+      <div class="row2">
+        <button class="btn" onclick="removeLogo()">로고 제거</button>
+        <button class="btn" onclick="resetGroup('brand')">기본값으로</button>
+      </div>
+      <div class="ctrl"><label>로고 높이</label><span class="val" data-out="--logo-h"></span><input type="range" min="10" max="80" step="0.5" data-var="--logo-h" data-unit="px"/></div>
+      <div class="note">로고·방향·외곽선·자간·<b>정렬</b>은 <b>모든 페이지에 공통</b> 적용됩니다. 칸 크기·자간·정렬은 해당 칸을 <b>클릭</b>하면 나타나는 미니 패널에서 조절하세요.</div>
+      <button class="btn full" style="margin-top:8px" onclick="resetTypography()">글자 크기·자간·정렬 모두 초기화</button>
+    </div>
+  </details>
+</aside>
+
+<div class="inspector" id="inspector" hidden aria-label="칸 글자 조절">
+  <div class="insp-title" id="inspTitle">칸</div>
+  <div class="insp-row"><div class="top"><span>글자 크기</span><span class="v" id="inspFsVal"></span></div><input type="range" id="inspFs" /></div>
+  <div class="insp-row"><div class="top"><span>자간</span><span class="v" id="inspLsVal"></span></div><input type="range" id="inspLs" min="-0.05" max="0.6" step="0.005" /></div>
+  <div class="insp-row" id="inspAlignRow">
+    <div class="top"><span>정렬</span></div>
+    <div class="seg" id="inspAlign">
+      <button type="button" data-al="left" title="좌측 정렬">좌</button>
+      <button type="button" data-al="center" title="중앙 정렬">중</button>
+      <button type="button" data-al="right" title="우측 정렬">우</button>
+    </div>
+  </div>
+  <div class="insp-foot"><button onclick="resetField()">이 칸 초기화</button><button onclick="hideInspector()">닫기</button></div>
+</div>
+
+<div class="hint">텍스트 <b>클릭</b> → 편집 + 크기·자간·정렬 미니패널 · 도장 영역에 이미지 <b>드래그</b> · <b>CSV</b>로 일괄 생성 · 자동 저장</div>
+
+<div class="stage" id="stage"></div>
+
+<template id="pageTemplate">
+  <div class="page">
+    <div class="inner">
+      <header class="head">
+        <div class="brand" aria-label="AIM Intelligence">
+          <svg viewBox="0 0 940 208" xmlns="http://www.w3.org/2000/svg" fill="none" role="img">
+            <rect x="91" y="0" width="26" height="78" fill="currentColor"></rect>
+            <rect x="91" y="130" width="26" height="78" fill="currentColor"></rect>
+            <rect x="0" y="91" width="78" height="26" fill="currentColor"></rect>
+            <rect x="130" y="91" width="78" height="26" fill="currentColor"></rect>
+            <path transform="translate(260 0)" d="M 53.669 146.137 L 30.66 208 L 0 208 L 80.514 0 L 117.085 0 L 197 208 L 166.34 208 L 143.331 146.137 L 53.689 146.137 L 53.669 146.137 Z M 134.762 122.848 L 98.49 24.446 L 62.218 122.848 L 134.762 122.848 Z" fill="currentColor"></path>
+            <rect x="487" y="0" width="30" height="208" fill="currentColor"></rect>
+            <path transform="translate(555 0)" d="M 0 0 L 30 0 L 95 130 L 160 0 L 190 0 L 190 208 L 160 208 L 160 60 L 105 170 L 85 170 L 30 60 L 30 208 L 0 208 Z" fill="currentColor"></path>
+          </svg>
+        </div>
+        <div class="issue" contenteditable="true" data-key="issue">제 2026-001 호</div>
+      </header>
+      <div class="title-wrap">
+        <h1 class="title" contenteditable="true" data-key="title">상 장</h1>
+        <div class="tag" contenteditable="true" data-key="tag">Certificate of Excellence</div>
+        <div class="dots" aria-hidden="true"><span></span><span></span><span class="mint"></span><span></span><span></span></div>
+      </div>
+      <section class="rcpt">
+        <div class="row">
+          <span class="label">성  명</span>
+          <span class="name" contenteditable="true" data-key="name">홍 길 동</span>
+          <span class="sep" aria-hidden="true"></span>
+          <span class="label">소  속</span>
+          <span class="aff" contenteditable="true" data-key="aff">AI Safety Research Team</span>
+        </div>
+      </section>
+      <p class="body" contenteditable="true" data-key="body">위 사람은 AI Safety 연구 분야에서 보여준 탁월한 통찰과 헌신적인 노력으로 회사의 발전과 기술 혁신에 크게 기여하였기에 그 공로를 깊이 치하하며 이 상장을 수여합니다.</p>
+      <div class="date" contenteditable="true" data-key="date">2026년 5월 28일</div>
+      <div class="org">
+        <div class="name" contenteditable="true" data-key="org">AIM Intelligence</div>
+        <div class="signer">
+          <span class="role" contenteditable="true" data-key="role">대표이사</span>
+          <span class="who" contenteditable="true" data-key="signer">○  ○  ○</span>
+        </div>
+      </div>
+      <div class="stamp empty" tabindex="0" aria-label="도장 (드래그로 이동, 클릭으로 업로드)">
+        <span class="stamp-placeholder">도장</span>
+        <input type="file" accept="image/*" />
+        <div class="stamp-menu">
+          <button type="button" data-act="replace">교체</button>
+          <button type="button" data-act="remove" class="danger">제거</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+  const PAGES_KEY="aim-cert-pages", SETTINGS_KEY="aim-cert-settings", LEGACY_TEXT="aim-cert", LEGACY_STAMP="aim-cert-stamp";
+  const stage=document.getElementById("stage"), tpl=document.getElementById("pageTemplate"), root=document.documentElement;
+  const DEFAULT_FIELDS={};
+  tpl.content.querySelectorAll("[data-key]").forEach(el=>{DEFAULT_FIELDS[el.dataset.key]=el.textContent;});
+  const DEFAULTS={
+    "--gap-header":6,"--gap-title-top":4,"--gap-title-bottom":5,"--gap-tag-bottom":9,
+    "--gap-recipient":7,"--gap-rcpt-name":16,"--gap-rcpt-aff":16,"--gap-rcpt-rows":48,
+    "--gap-body":9,"--gap-date":9,"--gap-org":7,"--stamp-size":28,
+    "--ob-inset":9,"--border-gap":2,"--ob-width":2.4,"--ob-color":"#4F4F4F","--ib-width":1,"--ib-color":"#4DD2A7","--logo-h":22,
+    "--fs-issue":12,"--fs-title":96,"--fs-tag":11.5,"--fs-name":28,"--fs-aff":16,"--fs-body":15.5,"--fs-date":17,"--fs-org-name":22,"--fs-role":13,"--fs-signer":17,
+    "--ls-issue":0.04,"--ls-title":0.04,"--ls-tag":0.32,"--ls-name":0.18,"--ls-aff":0.04,"--ls-body":0.01,"--ls-date":0.04,"--ls-org":0.18,"--ls-role":0.18,"--ls-signer":0.30,
+    "--al-title":"center","--al-tag":"center","--al-rcpt":"center","--al-body":"center","--al-date":"center","--al-org":"center","--al-signer":"center"
+  };
+  const GROUPS={
+    layout:["--gap-header","--gap-title-top","--gap-title-bottom","--gap-tag-bottom","--gap-recipient","--gap-rcpt-name","--gap-rcpt-aff","--gap-rcpt-rows","--gap-body","--gap-date","--gap-org","--stamp-size"],
+    border:["--ob-width","--ob-color","--ib-width","--ib-color","--ob-inset","--border-gap"],
+    brand:["--logo-h"]
+  };
+  const TYPO_VARS=["--fs-issue","--fs-title","--fs-tag","--fs-name","--fs-aff","--fs-body","--fs-date","--fs-org-name","--fs-role","--fs-signer","--ls-issue","--ls-title","--ls-tag","--ls-name","--ls-aff","--ls-body","--ls-date","--ls-org","--ls-role","--ls-signer","--al-title","--al-tag","--al-rcpt","--al-body","--al-date","--al-org","--al-signer"];
+
+  let settings=readSettings(), pages=loadPages(), activeIndex=0, locked=false;
+  function readSettings(){ try{return JSON.parse(localStorage.getItem(SETTINGS_KEY)||"{}")||{};}catch(e){return {};} }
+  function saveSettings(){ localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); }
+  function getVar(n){ return settings[n]!==undefined?settings[n]:DEFAULTS[n]; }
+  function setVar(n,v){ settings[n]=v; root.style.setProperty(n,v); saveSettings(); }
+  function applyVars(){ Object.keys(DEFAULTS).forEach(n=>root.style.setProperty(n,getVar(n))); }
+  function loadPages(){
+    try{ const a=JSON.parse(localStorage.getItem(PAGES_KEY)||"null"); if(Array.isArray(a)&&a.length) return a.map(p=>({fields:p.fields||{},stamp:p.stamp||{}})); }catch(e){}
+    let fields={},stamp={};
+    try{fields=JSON.parse(localStorage.getItem(LEGACY_TEXT)||"{}");}catch(e){}
+    try{stamp=JSON.parse(localStorage.getItem(LEGACY_STAMP)||"{}");}catch(e){}
+    return [{fields,stamp}];
+  }
+  function savePages(){ localStorage.setItem(PAGES_KEY, JSON.stringify(pages)); }
+  function newPageData(){ return {fields:Object.assign({},DEFAULT_FIELDS),stamp:{}}; }
+
+  const controls=document.querySelectorAll(".panel [data-var]");
+  function fmtVal(c,v){ if(c.dataset.type==="color") return String(v); return v+" "+(c.dataset.unit||""); }
+  function syncControls(){ controls.forEach(c=>{ const v=getVar(c.dataset.var); c.value=v; const o=document.querySelector('[data-out="'+c.dataset.var+'"]'); if(o)o.textContent=fmtVal(c,v); }); }
+  controls.forEach(c=>{ const h=()=>{ setVar(c.dataset.var,c.value); const o=document.querySelector('[data-out="'+c.dataset.var+'"]'); if(o)o.textContent=fmtVal(c,c.value); if(c.dataset.var==="--stamp-size") allStampPos(); }; c.addEventListener("input",h); c.addEventListener("change",h); });
+  function resetGroup(g){ (GROUPS[g]||[]).forEach(k=>{delete settings[k];}); saveSettings(); applyVars(); syncControls(); allStampPos(); }
+  function resetTypography(){ TYPO_VARS.forEach(k=>{delete settings[k];}); saveSettings(); applyVars(); if(inspKey) refreshInspector(); }
+  function togglePanel(){ document.getElementById("panel").classList.toggle("open"); }
+
+  const pageRuleEl=document.getElementById("printPageRule");
+  function isPortrait(){ return settings.orientation==="portrait"; }
+  function pageWidthMM(){ return isPortrait()?210:297; }
+  function pageHeightMM(){ return isPortrait()?297:210; }
+  function applyOrientation(){ const p=isPortrait(); stage.classList.toggle("portrait",p); pageRuleEl.textContent="@page{size:A4 "+(p?"portrait":"landscape")+";margin:0}"; const b=document.getElementById("btnOrient"); if(b)b.textContent=p?"세로 ▸ 가로로":"가로 ▸ 세로로"; allStampPos(); }
+  function toggleOrient(){ settings.orientation=isPortrait()?"landscape":"portrait"; saveSettings(); applyOrientation(); }
+
+  function applyBrand(){
+    const logo=settings.logo||null;
+    document.querySelectorAll(".stage .brand").forEach(b=>{
+      let img=b.querySelector("img.brand-img"); const svg=b.querySelector("svg");
+      if(logo){ if(!img){img=document.createElement("img");img.className="brand-img";b.appendChild(img);} img.src=logo; img.style.display="block"; if(svg)svg.style.display="none"; }
+      else { if(img)img.remove(); if(svg)svg.style.display="block"; }
+    });
+  }
+  document.getElementById("logoInput").addEventListener("change",(e)=>{ const f=e.target.files&&e.target.files[0]; if(!f||!f.type.startsWith("image/"))return; const r=new FileReader(); r.onload=()=>{settings.logo=r.result;saveSettings();applyBrand();}; r.readAsDataURL(f); e.target.value=""; });
+  function removeLogo(){ settings.logo=null; saveSettings(); applyBrand(); }
+
+  function defaultPos(){ return {x:pageWidthMM()*0.69,y:pageHeightMM()*0.80}; }
+  function currentSize(){ return parseFloat(getVar("--stamp-size"))||28; }
+  function allStampPos(){ [...stage.children].forEach(p=>{ if(p._applyStampPos)p._applyStampPos(); }); }
+
+  const FIELD_TYPO={
+    issue:{fs:"--fs-issue",min:6,max:40,step:0.5,ls:"--ls-issue",al:null},
+    title:{fs:"--fs-title",min:24,max:260,step:1,ls:"--ls-title",al:"--al-title"},
+    tag:{fs:"--fs-tag",min:6,max:48,step:0.5,ls:"--ls-tag",al:"--al-tag"},
+    name:{fs:"--fs-name",min:10,max:100,step:1,ls:"--ls-name",al:"--al-rcpt"},
+    aff:{fs:"--fs-aff",min:8,max:60,step:0.5,ls:"--ls-aff",al:"--al-rcpt"},
+    body:{fs:"--fs-body",min:8,max:48,step:0.5,ls:"--ls-body",al:"--al-body"},
+    date:{fs:"--fs-date",min:8,max:56,step:0.5,ls:"--ls-date",al:"--al-date"},
+    org:{fs:"--fs-org-name",min:10,max:72,step:0.5,ls:"--ls-org",al:"--al-org"},
+    role:{fs:"--fs-role",min:8,max:48,step:0.5,ls:"--ls-role",al:"--al-signer"},
+    signer:{fs:"--fs-signer",min:8,max:60,step:0.5,ls:"--ls-signer",al:"--al-signer"}
+  };
+  const FIELD_LABELS={issue:"상장번호",title:"제목",tag:"부제(영문)",name:"성명",aff:"소속",body:"본문",date:"일자",org:"발급기관",role:"직위",signer:"서명자"};
+  const inspector=document.getElementById("inspector"), inspTitle=document.getElementById("inspTitle"),
+    inspFs=document.getElementById("inspFs"), inspLs=document.getElementById("inspLs"),
+    inspFsVal=document.getElementById("inspFsVal"), inspLsVal=document.getElementById("inspLsVal"),
+    inspAlignRow=document.getElementById("inspAlignRow"), inspAlign=document.getElementById("inspAlign");
+  let inspKey=null;
+  function refreshInspector(){
+    if(!inspKey)return; const cfg=FIELD_TYPO[inspKey]; const fs=getVar(cfg.fs), ls=getVar(cfg.ls);
+    inspFs.min=cfg.min; inspFs.max=cfg.max; inspFs.step=cfg.step; inspFs.value=fs; inspFsVal.textContent=fs+" px";
+    inspLs.value=ls; inspLsVal.textContent=(Math.round(ls*1000)/1000)+" em";
+    if(cfg.al){ inspAlignRow.style.display=""; const cur=getVar(cfg.al); inspAlign.querySelectorAll("button").forEach(b=>b.classList.toggle("active",b.dataset.al===cur)); }
+    else { inspAlignRow.style.display="none"; }
+  }
+  function openInspector(field){ const key=field.dataset.key; if(!FIELD_TYPO[key])return; inspKey=key; inspTitle.textContent=(FIELD_LABELS[key]||key)+" — 글자 조절"; refreshInspector(); inspector.hidden=false; positionInspector(field); }
+  function positionInspector(field){ const r=field.getBoundingClientRect(); const iw=inspector.offsetWidth||224, ih=inspector.offsetHeight||170, vw=window.innerWidth, vh=window.innerHeight; let top=r.top-ih-10; if(top<8)top=Math.min(r.bottom+10,vh-ih-8); let left=Math.max(8,Math.min(r.left,vw-iw-8)); inspector.style.top=top+"px"; inspector.style.left=left+"px"; }
+  function hideInspector(){ inspector.hidden=true; inspKey=null; }
+  inspFs.addEventListener("input",()=>{ if(!inspKey)return; setVar(FIELD_TYPO[inspKey].fs,parseFloat(inspFs.value)); inspFsVal.textContent=inspFs.value+" px"; });
+  inspLs.addEventListener("input",()=>{ if(!inspKey)return; setVar(FIELD_TYPO[inspKey].ls,parseFloat(inspLs.value)); inspLsVal.textContent=(Math.round(parseFloat(inspLs.value)*1000)/1000)+" em"; });
+  inspAlign.addEventListener("click",(e)=>{ const b=e.target.closest("button"); if(!b||!inspKey)return; const cfg=FIELD_TYPO[inspKey]; if(!cfg.al)return; setVar(cfg.al,b.dataset.al); inspAlign.querySelectorAll("button").forEach(x=>x.classList.toggle("active",x===b)); });
+  function resetField(){ if(!inspKey)return; const cfg=FIELD_TYPO[inspKey]; delete settings[cfg.fs]; delete settings[cfg.ls]; if(cfg.al)delete settings[cfg.al]; saveSettings(); applyVars(); refreshInspector(); }
+  document.addEventListener("pointerdown",(e)=>{ const field=e.target.closest("[data-key]"); const inInsp=e.target.closest("#inspector"); if(field)openInspector(field); else if(!inInsp)hideInspector(); },true);
+  window.addEventListener("resize",()=>{ if(inspKey)hideInspector(); });
+
+  function buildPage(data){
+    data.fields=data.fields||{}; data.stamp=data.stamp||{};
+    const frag=tpl.content.cloneNode(true); const pageEl=frag.querySelector(".page");
+    pageEl.querySelectorAll("[data-key]").forEach(el=>{
+      const k=el.dataset.key; el.textContent=(data.fields[k]!==undefined)?data.fields[k]:DEFAULT_FIELDS[k];
+      const save=()=>{data.fields[k]=el.textContent;savePages();};
+      el.addEventListener("input",save); el.addEventListener("blur",save);
+      el.addEventListener("paste",e=>{ e.preventDefault(); const t=(e.clipboardData||window.clipboardData).getData("text"); document.execCommand("insertText",false,t); });
+      el.addEventListener("keydown",e=>{ if(e.key==="Enter"&&k!=="body"){e.preventDefault();el.blur();} });
+      if(locked)el.removeAttribute("contenteditable");
+    });
+    const badge=document.createElement("div"); badge.className="page-badge"; pageEl.appendChild(badge);
+    pageEl.addEventListener("pointerdown",()=>{ const idx=[...stage.children].indexOf(pageEl); if(idx!==-1)setActive(idx); });
+    wireStamp(pageEl,data); return pageEl;
+  }
+  function wireStamp(pageEl,data){
+    const stamp=pageEl.querySelector(".stamp"), stampInput=stamp.querySelector('input[type="file"]'), stampMenu=stamp.querySelector(".stamp-menu");
+    let stampImg=null;
+    function applyPos(){ const s=Object.assign(defaultPos(),data.stamp||{}); stamp.style.left=s.x+"mm"; stamp.style.top=s.y+"mm"; const sz=currentSize(); stamp.style.width=sz+"mm"; stamp.style.height=sz+"mm"; }
+    pageEl._applyStampPos=applyPos;
+    function setImg(url){ if(!url){ if(stampImg){stampImg.remove();stampImg=null;} stamp.classList.remove("filled");stamp.classList.add("empty"); data.stamp.src=null; savePages(); return; } if(!stampImg){stampImg=document.createElement("img");stamp.insertBefore(stampImg,stamp.firstChild);} stampImg.src=url; stamp.classList.remove("empty");stamp.classList.add("filled"); data.stamp.src=url; savePages(); }
+    function ingest(file){ if(!file||!file.type.startsWith("image/"))return; const r=new FileReader(); r.onload=()=>setImg(r.result); r.readAsDataURL(file); }
+    function openPicker(){ stampInput.value=""; stampInput.click(); }
+    stampInput.addEventListener("change",()=>ingest(stampInput.files&&stampInput.files[0]));
+    stamp.addEventListener("click",(e)=>{ if(stamp.classList.contains("empty")&&!e.target.closest(".stamp-menu"))openPicker(); });
+    stampMenu.addEventListener("click",(e)=>{ const btn=e.target.closest("button"); if(!btn)return; e.stopPropagation(); if(btn.dataset.act==="replace")openPicker(); if(btn.dataset.act==="remove")setImg(null); });
+    ["dragenter","dragover"].forEach(ev=>stamp.addEventListener(ev,(e)=>{ if(e.dataTransfer&&e.dataTransfer.types&&e.dataTransfer.types.includes("Files")){e.preventDefault();stamp.classList.add("dragover");} }));
+    ["dragleave","dragend","drop"].forEach(ev=>stamp.addEventListener(ev,()=>stamp.classList.remove("dragover")));
+    stamp.addEventListener("drop",(e)=>{ if(!e.dataTransfer||!e.dataTransfer.files.length)return; e.preventDefault(); ingest(e.dataTransfer.files[0]); });
+    pageEl.addEventListener("dragover",(e)=>{ if(e.dataTransfer&&e.dataTransfer.types&&e.dataTransfer.types.includes("Files"))e.preventDefault(); });
+    pageEl.addEventListener("drop",(e)=>{ if(!e.dataTransfer||!e.dataTransfer.files.length)return; const f=e.dataTransfer.files[0]; if(!f.type.startsWith("image/"))return; e.preventDefault(); const rect=pageEl.getBoundingClientRect(); const mmPerPx=pageWidthMM()/rect.width; const x=(e.clientX-rect.left)*mmPerPx, y=(e.clientY-rect.top)*mmPerPx, w=currentSize(); data.stamp.x=x-w/2; data.stamp.y=y-w/2; applyPos(); ingest(f); });
+    let drag=null;
+    stamp.addEventListener("pointerdown",(e)=>{ if(!stamp.classList.contains("filled"))return; if(e.target.closest(".stamp-menu"))return; stamp.setPointerCapture(e.pointerId); const rect=pageEl.getBoundingClientRect(); const mmPerPx=pageWidthMM()/rect.width; const sRect=stamp.getBoundingClientRect(); drag={mmPerPx,offX:(e.clientX-sRect.left)*mmPerPx,offY:(e.clientY-sRect.top)*mmPerPx,pageLeft:rect.left,pageTop:rect.top}; stamp.style.transition="none"; });
+    stamp.addEventListener("pointermove",(e)=>{ if(!drag)return; const x=(e.clientX-drag.pageLeft)*drag.mmPerPx-drag.offX, y=(e.clientY-drag.pageTop)*drag.mmPerPx-drag.offY; stamp.style.left=x+"mm"; stamp.style.top=y+"mm"; });
+    stamp.addEventListener("pointerup",()=>{ if(!drag)return; stamp.style.transition=""; data.stamp.x=parseFloat(stamp.style.left); data.stamp.y=parseFloat(stamp.style.top); savePages(); drag=null; });
+    applyPos(); if(data.stamp&&data.stamp.src)setImg(data.stamp.src);
+  }
+  function renderAll(){ stage.innerHTML=""; pages.forEach(d=>stage.appendChild(buildPage(d))); renumber(); applyBrand(); }
+  function renumber(){ [...stage.children].forEach((p,i)=>{ const b=p.querySelector(".page-badge"); if(b)b.textContent=(i+1)+" / "+pages.length; }); }
+  function setActive(i){ activeIndex=Math.max(0,Math.min(i,pages.length-1)); [...stage.children].forEach((p,idx)=>p.classList.toggle("active-page",idx===activeIndex)); }
+  function addPages(count){ count=Math.max(1,Math.min(200,parseInt(count,10)||1)); const src=pages[activeIndex]||pages[pages.length-1]; const at=pages.length?activeIndex+1:0; const copies=[]; for(let i=0;i<count;i++){ copies.push(src?{fields:Object.assign({},src.fields),stamp:Object.assign({},src.stamp)}:newPageData()); } pages.splice(at,0,...copies); savePages(); renderAll(); const na=at+count-1; setActive(na); const el=stage.children[na]; if(el)el.scrollIntoView({behavior:"smooth",block:"center"}); }
+  function addPage(){ addPages(1); }
+  function deletePage(){ if(pages.length<=1){ if(!confirm("마지막 한 페이지입니다. 내용을 초기 상태로 비울까요?"))return; pages[0]=newPageData(); savePages(); renderAll(); setActive(0); return; } if(!confirm("활성 페이지("+(activeIndex+1)+"번)를 삭제할까요?"))return; pages.splice(activeIndex,1); if(activeIndex>=pages.length)activeIndex=pages.length-1; savePages(); renderAll(); setActive(activeIndex); }
+  function lockAll(){ locked=true; document.querySelectorAll('[contenteditable]').forEach(el=>el.removeAttribute("contenteditable")); hideInspector(); }
+  function resetAll(){ if(!confirm("저장된 모든 페이지·도장·간격·크기·외곽선·로고·정렬을 초기화할까요?"))return; [PAGES_KEY,SETTINGS_KEY,LEGACY_TEXT,LEGACY_STAMP].forEach(k=>localStorage.removeItem(k)); location.reload(); }
+
+  const CSV_COLS=Object.keys(DEFAULT_FIELDS);
+  function parseCSV(text){ text=text.replace(/^﻿/,""); const rows=[]; let row=[],cur="",inQ=false; for(let i=0;i<text.length;i++){ const ch=text[i],nx=text[i+1]; if(inQ){ if(ch==='"'&&nx==='"'){cur+='"';i++;} else if(ch==='"'){inQ=false;} else cur+=ch; } else { if(ch==='"'){inQ=true;} else if(ch===','){row.push(cur);cur="";} else if(ch==='\r'){} else if(ch==='\n'){row.push(cur);rows.push(row);row=[];cur="";} else cur+=ch; } } if(cur.length||row.length){row.push(cur);rows.push(row);} return rows; }
+  function importCSVText(text){ const rows=parseCSV(text).filter(r=>r.length&&r.some(c=>String(c).trim()!=="")); if(rows.length<2){alert("CSV에 헤더 1줄 + 데이터 1줄 이상이 필요합니다.");return;} const header=rows[0].map(h=>String(h).trim()); const known=header.map(h=>CSV_COLS.includes(h)?h:null); if(!known.some(Boolean)){alert("인식 가능한 열이 없습니다. 헤더는 다음 중 하나여야 합니다:\n"+CSV_COLS.join(", ")+"\n\n[예시 CSV] 버튼으로 양식을 받으세요.");return;} const newPages=rows.slice(1).map(r=>{ const f=Object.assign({},DEFAULT_FIELDS); known.forEach((key,i)=>{ if(key&&r[i]!==undefined&&String(r[i]).trim()!=="")f[key]=String(r[i]).trim(); }); return {fields:f,stamp:{}}; }); const replace=confirm(newPages.length+"개 행을 찾았습니다.\n\n[확인] = 기존 페이지 전체 교체\n[취소] = 기존 페이지 뒤에 추가"); pages=replace?newPages:pages.concat(newPages); savePages(); renderAll(); setActive(pages.length-1); const el=stage.children[pages.length-1]; if(el)el.scrollIntoView({behavior:"smooth",block:"center"}); }
+  document.getElementById("csvInput").addEventListener("change",(e)=>{ const f=e.target.files&&e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=()=>importCSVText(String(r.result)); r.readAsText(f,"utf-8"); e.target.value=""; });
+  function csvEscape(v){ v=String(v==null?"":v); return /[",\n\r]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v; }
+  function downloadSampleCSV(){
+    const sample=[
+      {issue:"제 2026-001 호",title:"상 장",tag:"Certificate of Excellence",name:"홍 길 동",aff:"AI Safety Research Team",body:"위 사람은 AI Safety 연구 분야에서 보여준 탁월한 통찰과 헌신으로 회사 발전에 기여하였기에 이 상장을 수여합니다.",date:"2026년 5월 28일",org:"AIM Intelligence",role:"대표이사",signer:"○ ○ ○"},
+      {issue:"제 2026-002 호",title:"상 장",tag:"Certificate of Excellence",name:"김 영 희",aff:"Platform Engineering",body:"위 사람은 플랫폼 안정화와 생산성 향상에 크게 기여하였기에 그 공로를 치하하며 이 상장을 수여합니다.",date:"2026년 5월 28일",org:"AIM Intelligence",role:"대표이사",signer:"○ ○ ○"}
+    ];
+    const lines=[CSV_COLS.join(",")]; sample.forEach(o=>lines.push(CSV_COLS.map(c=>csvEscape(o[c])).join(",")));
+    const blob=new Blob(["﻿"+lines.join("\r\n")],{type:"text/csv;charset=utf-8"}); const url=URL.createObjectURL(blob);
+    const a=document.createElement("a"); a.href=url; a.download="AIM_certificate_list_sample.csv"; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1000);
+  }
+
+  applyVars(); syncControls(); applyOrientation(); renderAll(); setActive(0); savePages();
+</script>
+</body>
+</html>
