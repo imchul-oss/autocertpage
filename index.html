@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8" />
-<title>AIM 상장</title>
+<title>상장 제조기</title>
 <style id="printPageRule">@page{size:A4 landscape;margin:0}</style>
 <style>
   @font-face { font-family:"GT Planar"; src:url("fonts/GT-Planar-Regular.woff2") format("woff2"); font-weight:400; font-style:normal; font-display:swap; }
@@ -13,7 +13,7 @@
   @font-face { font-family:"Pretendard"; src:url("fonts/Pretendard-Bold.woff2") format("woff2"); font-weight:700; font-style:normal; font-display:swap; }
 
   :root {
-    --aim-dark:#4F4F4F; --aim-ink:#2F2F2F; --mint:#4DD2A7; --mint-2:#3ABF94;
+    --ink-2:#4F4F4F; --ink-1:#2F2F2F; --mint:#4DD2A7; --mint-2:#3ABF94;
     --gray-2:#717171; --gray-3:#A8A8A8; --gray-4:#DEDEDE; --paper:#FFFFFF; --bg:#EAEAEA;
     --ff-kr: "Pretendard", -apple-system, BlinkMacSystemFont, "Malgun Gothic", sans-serif;
     --ff-en: "GT Planar", "Pretendard", -apple-system, BlinkMacSystemFont, sans-serif;
@@ -31,19 +31,19 @@
   }
   * { box-sizing: border-box; }
   html, body { margin:0; padding:0; }
-  body { background: var(--bg); font-family: var(--ff-kr); color: var(--aim-dark); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+  body { background: var(--bg); font-family: var(--ff-kr); color: var(--ink-2); min-height: 100vh; -webkit-font-smoothing: antialiased; }
 
   .toolbar { position: fixed; top: 20px; right: 20px; z-index: 50; display: flex; align-items: center; gap: 8px;
-    background: var(--aim-ink); border-radius: 999px; padding: 6px; box-shadow: 0 10px 30px rgba(47,47,47,.22);
+    background: var(--ink-1); border-radius: 999px; padding: 6px; box-shadow: 0 10px 30px rgba(47,47,47,.22);
     max-width: calc(100vw - 40px); flex-wrap: wrap; }
   .toolbar button { appearance: none; border: none; background: transparent; color: #fff; font-family: var(--ff-en);
     font-size: 11.5px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500; padding: 10px 15px;
     border-radius: 999px; cursor: pointer; transition: background 160ms; display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
   .toolbar button:hover { background: rgba(255,255,255,.08); }
-  .toolbar button.primary { background: var(--mint); color: var(--aim-ink); }
+  .toolbar button.primary { background: var(--mint); color: var(--ink-1); }
   .toolbar button.primary:hover { background: var(--mint-2); color: #fff; }
   .toolbar .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--mint); }
-  .toolbar button.primary .dot { background: var(--aim-ink); }
+  .toolbar button.primary .dot { background: var(--ink-1); }
   .toolbar .sep { width: 1px; align-self: stretch; margin: 4px 1px; background: rgba(255,255,255,.16); }
   .toolbar .grp-pages { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,.06); border-radius: 999px; padding: 3px 4px 3px 12px; }
   .toolbar .grp-pages .lbl { color: rgba(255,255,255,.7); font-family: var(--ff-en); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; }
@@ -61,7 +61,7 @@
   .panel.open { transform: translateX(0); }
   .panel .panel-title { font-family: var(--ff-en); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gray-2); padding: 8px 2px 10px; }
   .grp { border-top: 1px solid var(--gray-4); }
-  .grp > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; padding: 12px 2px; font-size: 13px; font-weight: 600; color: var(--aim-ink); }
+  .grp > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; padding: 12px 2px; font-size: 13px; font-weight: 600; color: var(--ink-1); }
   .grp > summary::-webkit-details-marker { display: none; }
   .grp > summary .chev { width: 8px; height: 8px; border-right: 1.5px solid var(--gray-2); border-bottom: 1.5px solid var(--gray-2); transform: rotate(45deg); transition: transform 180ms; margin-right: 4px; }
   .grp[open] > summary .chev { transform: rotate(-135deg); }
@@ -70,13 +70,13 @@
   .grp .grp-reset button { appearance: none; border: none; background: transparent; color: var(--gray-2); font-family: inherit; font-size: 11px; letter-spacing: 0.04em; cursor: pointer; padding: 0; }
   .grp .grp-reset button:hover { color: var(--mint-2); }
   .ctrl { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 8px; padding: 7px 0; }
-  .ctrl label { font-size: 12px; color: var(--aim-dark); font-weight: 500; }
+  .ctrl label { font-size: 12px; color: var(--ink-2); font-weight: 500; }
   .ctrl .val { font-family: var(--ff-en); font-size: 11px; color: var(--gray-2); font-variant-numeric: tabular-nums; min-width: 44px; text-align: right; }
   .ctrl input[type="range"] { grid-column: 1 / -1; width: 100%; -webkit-appearance: none; appearance: none; height: 3px; background: var(--gray-4); border-radius: 2px; outline: none; margin: 4px 0 2px; }
   .ctrl input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; background: var(--mint); border-radius: 50%; cursor: pointer; border: 2px solid #fff; box-shadow: 0 1px 4px rgba(47,47,47,.2); }
   .ctrl input[type="range"]::-moz-range-thumb { width: 14px; height: 14px; background: var(--mint); border-radius: 50%; cursor: pointer; border: 2px solid #fff; }
   .ctrl.color input[type="color"] { width: 30px; height: 22px; padding: 0; border: 1px solid var(--gray-4); border-radius: 6px; background: none; cursor: pointer; }
-  .panel .btn { appearance: none; cursor: pointer; border: 1px solid var(--gray-4); background: #fff; color: var(--aim-ink); font-family: var(--ff-kr); font-size: 12px; font-weight: 500; padding: 8px 12px; border-radius: 9px; transition: background 140ms, border-color 140ms; }
+  .panel .btn { appearance: none; cursor: pointer; border: 1px solid var(--gray-4); background: #fff; color: var(--ink-1); font-family: var(--ff-kr); font-size: 12px; font-weight: 500; padding: 8px 12px; border-radius: 9px; transition: background 140ms, border-color 140ms; }
   .panel .btn:hover { border-color: var(--mint-2); color: var(--mint-2); }
   .panel .btn.full { width: 100%; }
   .panel .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 6px 0; }
@@ -84,10 +84,10 @@
 
   .inspector { position: fixed; z-index: 60; width: 224px; background: #fff; border: 1px solid var(--gray-4); border-radius: 12px; padding: 12px 14px 13px; box-shadow: 0 14px 40px rgba(47,47,47,.22); font-family: var(--ff-kr); }
   .inspector[hidden] { display: none; }
-  .inspector .insp-title { font-size: 12px; font-weight: 700; color: var(--aim-ink); display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+  .inspector .insp-title { font-size: 12px; font-weight: 700; color: var(--ink-1); display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
   .inspector .insp-title::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--mint); }
   .inspector .insp-row { padding: 5px 0; }
-  .inspector .insp-row .top { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--aim-dark); }
+  .inspector .insp-row .top { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--ink-2); }
   .inspector .insp-row .v { font-family: var(--ff-en); font-size: 11px; color: var(--gray-2); font-variant-numeric: tabular-nums; }
   .inspector input[type="range"] { width: 100%; -webkit-appearance: none; appearance: none; height: 3px; background: var(--gray-4); border-radius: 2px; outline: none; margin: 6px 0 0; }
   .inspector input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; background: var(--mint); border-radius: 50%; cursor: pointer; border: 2px solid #fff; box-shadow: 0 1px 4px rgba(47,47,47,.2); }
@@ -95,7 +95,7 @@
   .inspector .seg { display: grid; grid-template-columns: repeat(3,1fr); gap: 4px; margin-top: 6px; }
   .inspector .seg button { appearance: none; cursor: pointer; border: 1px solid var(--gray-4); background: #fff; color: var(--gray-2); font-family: var(--ff-kr); font-size: 12px; padding: 6px 0; border-radius: 7px; transition: all 120ms; }
   .inspector .seg button:hover { border-color: var(--mint-2); color: var(--mint-2); }
-  .inspector .seg button.active { background: var(--mint); border-color: var(--mint); color: var(--aim-ink); font-weight: 600; }
+  .inspector .seg button.active { background: var(--mint); border-color: var(--mint); color: var(--ink-1); font-weight: 600; }
   .inspector .insp-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
   .inspector .insp-foot button { appearance: none; border: none; background: transparent; cursor: pointer; color: var(--gray-2); font-family: inherit; font-size: 11px; padding: 0; }
   .inspector .insp-foot button:hover { color: var(--mint-2); }
@@ -106,17 +106,17 @@
   .page::before { content: ""; position: absolute; inset: calc(var(--ob-inset) * 1mm); border: calc(var(--ob-width) * 1px) solid var(--ob-color); pointer-events: none; }
   .page::after { content: ""; position: absolute; inset: calc((var(--ob-inset) + var(--border-gap)) * 1mm); border: calc(var(--ib-width) * 1px) solid var(--ib-color); pointer-events: none; }
   .page.active-page { box-shadow: 0 0 0 3px var(--mint), 0 30px 80px rgba(47,47,47,.18), 0 2px 6px rgba(47,47,47,.08); }
-  .page-badge { position: absolute; top: 8px; left: 8px; z-index: 6; background: var(--aim-ink); color: #fff; font-family: var(--ff-en); font-size: 11px; letter-spacing: 0.1em; padding: 4px 11px; border-radius: 999px; opacity: .82; pointer-events: none; font-variant-numeric: tabular-nums; }
+  .page-badge { position: absolute; top: 8px; left: 8px; z-index: 6; background: var(--ink-1); color: #fff; font-family: var(--ff-en); font-size: 11px; letter-spacing: 0.1em; padding: 4px 11px; border-radius: 999px; opacity: .82; pointer-events: none; font-variant-numeric: tabular-nums; }
   .inner { flex: 1; display: flex; flex-direction: column; padding: 8mm 16mm; position: relative; z-index: 1; }
 
   .head { display: flex; justify-content: space-between; align-items: center; margin-bottom: calc(var(--gap-header) * 1mm); }
-  .head .brand { display: flex; align-items: center; color: var(--aim-dark); }
+  .head .brand { display: flex; align-items: center; color: var(--ink-2); }
   .head .brand svg, .head .brand img.brand-img { display: block; height: calc(var(--logo-h) * 1px); width: auto; }
   .head .brand img.brand-img { object-fit: contain; max-width: 120mm; }
   .head .issue { color: var(--gray-2); font-family: var(--ff-en); font-size: calc(var(--fs-issue) * 1px); letter-spacing: calc(var(--ls-issue) * 1em); }
 
   .title-wrap { text-align: center; margin-top: calc(var(--gap-title-top) * 1mm); }
-  .title { font-family: var(--ff-kr); font-size: calc(var(--fs-title) * 1px); color: var(--aim-ink); font-weight: 700; letter-spacing: calc(var(--ls-title) * 1em); text-align: var(--al-title); line-height: 1; margin: 0; }
+  .title { font-family: var(--ff-kr); font-size: calc(var(--fs-title) * 1px); color: var(--ink-1); font-weight: 700; letter-spacing: calc(var(--ls-title) * 1em); text-align: var(--al-title); line-height: 1; margin: 0; }
   .tag { margin-top: calc(var(--gap-title-bottom) * 1mm); font-family: var(--ff-en); font-size: calc(var(--fs-tag) * 1px); letter-spacing: calc(var(--ls-tag) * 1em); text-align: var(--al-tag); color: var(--mint-2); font-weight: 500; text-transform: uppercase; }
   .dots { margin: calc(var(--gap-tag-bottom) * 1mm) auto 0; display: flex; gap: 9px; align-items: center; width: fit-content; }
   .dots span { width: 5px; height: 5px; border-radius: 50%; background: var(--gray-4); }
@@ -128,17 +128,17 @@
   .rcpt .sep  { display: inline-block; width: calc(var(--gap-rcpt-rows) * 1px); }
   .rcpt .aff  { margin-left: calc(var(--gap-rcpt-aff) * 1px); }
   .rcpt .label { color: var(--gray-2); font-family: var(--ff-kr); font-weight: 500; font-size: 13px; letter-spacing: 0.18em; white-space: nowrap; }
-  .rcpt .name { font-family: var(--ff-kr); font-size: calc(var(--fs-name) * 1px); color: var(--aim-ink); font-weight: 700; letter-spacing: calc(var(--ls-name) * 1em); }
-  .rcpt .aff { font-family: var(--ff-kr); font-size: calc(var(--fs-aff) * 1px); color: var(--aim-ink); font-weight: 700; letter-spacing: calc(var(--ls-aff) * 1em); }
+  .rcpt .name { font-family: var(--ff-kr); font-size: calc(var(--fs-name) * 1px); color: var(--ink-1); font-weight: 700; letter-spacing: calc(var(--ls-name) * 1em); }
+  .rcpt .aff { font-family: var(--ff-kr); font-size: calc(var(--fs-aff) * 1px); color: var(--ink-1); font-weight: 700; letter-spacing: calc(var(--ls-aff) * 1em); }
 
-  .body { margin: calc(var(--gap-body) * 1mm) 25mm 0; text-align: var(--al-body); font-family: var(--ff-kr); font-size: calc(var(--fs-body) * 1px); line-height: 1.95; color: var(--aim-dark); font-weight: 400; text-wrap: pretty; letter-spacing: calc(var(--ls-body) * 1em); }
+  .body { margin: calc(var(--gap-body) * 1mm) 25mm 0; text-align: var(--al-body); font-family: var(--ff-kr); font-size: calc(var(--fs-body) * 1px); line-height: 1.95; color: var(--ink-2); font-weight: 400; text-wrap: pretty; letter-spacing: calc(var(--ls-body) * 1em); }
 
-  .date { margin-top: calc(var(--gap-date) * 1mm); text-align: var(--al-date); font-family: var(--ff-kr); font-size: calc(var(--fs-date) * 1px); color: var(--aim-ink); font-weight: 600; letter-spacing: calc(var(--ls-date) * 1em); }
+  .date { margin-top: calc(var(--gap-date) * 1mm); text-align: var(--al-date); font-family: var(--ff-kr); font-size: calc(var(--fs-date) * 1px); color: var(--ink-1); font-weight: 600; letter-spacing: calc(var(--ls-date) * 1em); }
   .org { margin-top: calc(var(--gap-org) * 1mm); text-align: var(--al-signer); }
-  .org .name { font-family: var(--ff-en); font-size: calc(var(--fs-org-name) * 1px); color: var(--aim-ink); font-weight: 500; letter-spacing: calc(var(--ls-org) * 1em); text-align: var(--al-org); }
+  .org .name { font-family: var(--ff-en); font-size: calc(var(--fs-org-name) * 1px); color: var(--ink-1); font-weight: 500; letter-spacing: calc(var(--ls-org) * 1em); text-align: var(--al-org); }
   .org .signer { margin-top: 10px; display: inline-flex; align-items: center; gap: 14px; font-size: 13px; color: var(--gray-2); letter-spacing: 0.04em; position: relative; }
   .org .signer .role { font-family: var(--ff-kr); font-weight: 500; letter-spacing: calc(var(--ls-role) * 1em); font-size: calc(var(--fs-role) * 1px); }
-  .org .signer .who { font-family: var(--ff-kr); color: var(--aim-ink); font-weight: 700; font-size: calc(var(--fs-signer) * 1px); letter-spacing: calc(var(--ls-signer) * 1em); }
+  .org .signer .who { font-family: var(--ff-kr); color: var(--ink-1); font-weight: 700; font-size: calc(var(--fs-signer) * 1px); letter-spacing: calc(var(--ls-signer) * 1em); }
 
   .stamp { position: absolute; z-index: 5; width: 28mm; height: 28mm; user-select: none; -webkit-user-drag: none; transition: box-shadow 160ms; }
   .stamp.empty { border: 1.5px dashed var(--gray-3); background: rgba(77, 210, 167, 0.04); display: flex; align-items: center; justify-content: center; color: var(--gray-2); font-family: var(--ff-kr); font-size: 12px; letter-spacing: 0.18em; cursor: pointer; }
@@ -150,7 +150,7 @@
   .stamp.filled:hover { box-shadow: 0 0 0 2px var(--mint), 0 6px 18px rgba(47,47,47,.12); }
   .stamp.filled .stamp-placeholder { display: none; }
   .stamp.filled::before { display: none; }
-  .stamp .stamp-menu { position: absolute; top: -34px; right: 0; display: none; gap: 4px; background: var(--aim-ink); border-radius: 999px; padding: 4px; box-shadow: 0 6px 18px rgba(47,47,47,.22); }
+  .stamp .stamp-menu { position: absolute; top: -34px; right: 0; display: none; gap: 4px; background: var(--ink-1); border-radius: 999px; padding: 4px; box-shadow: 0 6px 18px rgba(47,47,47,.22); }
   .stamp.filled:hover .stamp-menu { display: flex; }
   .stamp .stamp-menu button { appearance: none; border: none; background: transparent; color: #fff; font-family: var(--ff-en); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500; padding: 5px 10px; border-radius: 999px; cursor: pointer; }
   .stamp .stamp-menu button:hover { background: rgba(255,255,255,.12); }
@@ -274,15 +274,10 @@
   <div class="page">
     <div class="inner">
       <header class="head">
-        <div class="brand" aria-label="AIM Intelligence">
-          <svg viewBox="0 0 940 208" xmlns="http://www.w3.org/2000/svg" fill="none" role="img">
-            <rect x="91" y="0" width="26" height="78" fill="currentColor"></rect>
-            <rect x="91" y="130" width="26" height="78" fill="currentColor"></rect>
-            <rect x="0" y="91" width="78" height="26" fill="currentColor"></rect>
-            <rect x="130" y="91" width="78" height="26" fill="currentColor"></rect>
-            <path transform="translate(260 0)" d="M 53.669 146.137 L 30.66 208 L 0 208 L 80.514 0 L 117.085 0 L 197 208 L 166.34 208 L 143.331 146.137 L 53.689 146.137 L 53.669 146.137 Z M 134.762 122.848 L 98.49 24.446 L 62.218 122.848 L 134.762 122.848 Z" fill="currentColor"></path>
-            <rect x="487" y="0" width="30" height="208" fill="currentColor"></rect>
-            <path transform="translate(555 0)" d="M 0 0 L 30 0 L 95 130 L 160 0 L 190 0 L 190 208 L 160 208 L 160 60 L 105 170 L 85 170 L 30 60 L 30 208 L 0 208 Z" fill="currentColor"></path>
+        <div class="brand" aria-label="로고 (클릭 업로드)">
+          <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" fill="none" role="img" aria-label="로고 placeholder">
+            <rect x="12" y="12" width="96" height="96" rx="12" fill="none" stroke="currentColor" stroke-width="9"/>
+            <rect x="46" y="46" width="28" height="28" rx="4" fill="currentColor"/>
           </svg>
         </div>
         <div class="issue" contenteditable="true" data-key="issue">제 2026-001 호</div>
@@ -298,13 +293,13 @@
           <span class="name" contenteditable="true" data-key="name">홍 길 동</span>
           <span class="sep" aria-hidden="true"></span>
           <span class="label">소  속</span>
-          <span class="aff" contenteditable="true" data-key="aff">AI Safety Research Team</span>
+          <span class="aff" contenteditable="true" data-key="aff">소속 / 부서</span>
         </div>
       </section>
-      <p class="body" contenteditable="true" data-key="body">위 사람은 AI Safety 연구 분야에서 보여준 탁월한 통찰과 헌신적인 노력으로 회사의 발전과 기술 혁신에 크게 기여하였기에 그 공로를 깊이 치하하며 이 상장을 수여합니다.</p>
+      <p class="body" contenteditable="true" data-key="body">위 사람은 맡은 바 직무에 성실히 임하여 회사의 발전과 성장에 기여한 공이 크므로 그 공로를 깊이 치하하며 이 상장을 수여합니다.</p>
       <div class="date" contenteditable="true" data-key="date">2026년 5월 28일</div>
       <div class="org">
-        <div class="name" contenteditable="true" data-key="org">AIM Intelligence</div>
+        <div class="name" contenteditable="true" data-key="org">회사명</div>
         <div class="signer">
           <span class="role" contenteditable="true" data-key="role">대표이사</span>
           <span class="who" contenteditable="true" data-key="signer">○  ○  ○</span>
@@ -323,7 +318,8 @@
 </template>
 
 <script>
-  const PAGES_KEY="aim-cert-pages", SETTINGS_KEY="aim-cert-settings", LEGACY_TEXT="aim-cert", LEGACY_STAMP="aim-cert-stamp";
+  const PAGES_KEY="cert-pages", SETTINGS_KEY="cert-settings";
+  const LEGACY_PAGES="aim-cert-pages", LEGACY_SETTINGS="aim-cert-settings", LEGACY_TEXT="aim-cert", LEGACY_STAMP="aim-cert-stamp";
   const stage=document.getElementById("stage"), tpl=document.getElementById("pageTemplate"), root=document.documentElement;
   const DEFAULT_FIELDS={};
   tpl.content.querySelectorAll("[data-key]").forEach(el=>{DEFAULT_FIELDS[el.dataset.key]=el.textContent;});
@@ -344,13 +340,13 @@
   const TYPO_VARS=["--fs-issue","--fs-title","--fs-tag","--fs-name","--fs-aff","--fs-body","--fs-date","--fs-org-name","--fs-role","--fs-signer","--ls-issue","--ls-title","--ls-tag","--ls-name","--ls-aff","--ls-body","--ls-date","--ls-org","--ls-role","--ls-signer","--al-title","--al-tag","--al-rcpt","--al-body","--al-date","--al-org","--al-signer"];
 
   let settings=readSettings(), pages=loadPages(), activeIndex=0, locked=false;
-  function readSettings(){ try{return JSON.parse(localStorage.getItem(SETTINGS_KEY)||"{}")||{};}catch(e){return {};} }
+  function readSettings(){ for(const k of [SETTINGS_KEY,LEGACY_SETTINGS]){ try{const o=JSON.parse(localStorage.getItem(k)||"null"); if(o&&typeof o==="object") return o;}catch(e){} } return {}; }
   function saveSettings(){ localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); }
   function getVar(n){ return settings[n]!==undefined?settings[n]:DEFAULTS[n]; }
   function setVar(n,v){ settings[n]=v; root.style.setProperty(n,v); saveSettings(); }
   function applyVars(){ Object.keys(DEFAULTS).forEach(n=>root.style.setProperty(n,getVar(n))); }
   function loadPages(){
-    try{ const a=JSON.parse(localStorage.getItem(PAGES_KEY)||"null"); if(Array.isArray(a)&&a.length) return a.map(p=>({fields:p.fields||{},stamp:p.stamp||{}})); }catch(e){}
+    for(const k of [PAGES_KEY,LEGACY_PAGES]){ try{ const a=JSON.parse(localStorage.getItem(k)||"null"); if(Array.isArray(a)&&a.length) return a.map(p=>({fields:p.fields||{},stamp:p.stamp||{}})); }catch(e){} }
     let fields={},stamp={};
     try{fields=JSON.parse(localStorage.getItem(LEGACY_TEXT)||"{}");}catch(e){}
     try{stamp=JSON.parse(localStorage.getItem(LEGACY_STAMP)||"{}");}catch(e){}
@@ -468,7 +464,7 @@
   function addPage(){ addPages(1); }
   function deletePage(){ if(pages.length<=1){ if(!confirm("마지막 한 페이지입니다. 내용을 초기 상태로 비울까요?"))return; pages[0]=newPageData(); savePages(); renderAll(); setActive(0); return; } if(!confirm("활성 페이지("+(activeIndex+1)+"번)를 삭제할까요?"))return; pages.splice(activeIndex,1); if(activeIndex>=pages.length)activeIndex=pages.length-1; savePages(); renderAll(); setActive(activeIndex); }
   function lockAll(){ locked=true; document.querySelectorAll('[contenteditable]').forEach(el=>el.removeAttribute("contenteditable")); hideInspector(); }
-  function resetAll(){ if(!confirm("저장된 모든 페이지·도장·간격·크기·외곽선·로고·정렬을 초기화할까요?"))return; [PAGES_KEY,SETTINGS_KEY,LEGACY_TEXT,LEGACY_STAMP].forEach(k=>localStorage.removeItem(k)); location.reload(); }
+  function resetAll(){ if(!confirm("저장된 모든 페이지·도장·간격·크기·외곽선·로고·정렬을 초기화할까요?"))return; [PAGES_KEY,SETTINGS_KEY,LEGACY_PAGES,LEGACY_SETTINGS,LEGACY_TEXT,LEGACY_STAMP].forEach(k=>localStorage.removeItem(k)); location.reload(); }
 
   const CSV_COLS=Object.keys(DEFAULT_FIELDS);
   function parseCSV(text){ text=text.replace(/^﻿/,""); const rows=[]; let row=[],cur="",inQ=false; for(let i=0;i<text.length;i++){ const ch=text[i],nx=text[i+1]; if(inQ){ if(ch==='"'&&nx==='"'){cur+='"';i++;} else if(ch==='"'){inQ=false;} else cur+=ch; } else { if(ch==='"'){inQ=true;} else if(ch===','){row.push(cur);cur="";} else if(ch==='\r'){} else if(ch==='\n'){row.push(cur);rows.push(row);row=[];cur="";} else cur+=ch; } } if(cur.length||row.length){row.push(cur);rows.push(row);} return rows; }
@@ -477,12 +473,12 @@
   function csvEscape(v){ v=String(v==null?"":v); return /[",\n\r]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v; }
   function downloadSampleCSV(){
     const sample=[
-      {issue:"제 2026-001 호",title:"상 장",tag:"Certificate of Excellence",name:"홍 길 동",aff:"AI Safety Research Team",body:"위 사람은 AI Safety 연구 분야에서 보여준 탁월한 통찰과 헌신으로 회사 발전에 기여하였기에 이 상장을 수여합니다.",date:"2026년 5월 28일",org:"AIM Intelligence",role:"대표이사",signer:"○ ○ ○"},
-      {issue:"제 2026-002 호",title:"상 장",tag:"Certificate of Excellence",name:"김 영 희",aff:"Platform Engineering",body:"위 사람은 플랫폼 안정화와 생산성 향상에 크게 기여하였기에 그 공로를 치하하며 이 상장을 수여합니다.",date:"2026년 5월 28일",org:"AIM Intelligence",role:"대표이사",signer:"○ ○ ○"}
+      {issue:"제 2026-001 호",title:"상 장",tag:"Certificate of Excellence",name:"홍 길 동",aff:"영업본부",body:"위 사람은 맡은 바 직무에 성실히 임하여 회사의 발전에 기여한 공이 크므로 이 상장을 수여합니다.",date:"2026년 5월 28일",org:"회사명",role:"대표이사",signer:"○ ○ ○"},
+      {issue:"제 2026-002 호",title:"상 장",tag:"Certificate of Excellence",name:"김 영 희",aff:"개발팀",body:"위 사람은 업무 혁신과 생산성 향상에 크게 기여하였기에 그 공로를 치하하며 이 상장을 수여합니다.",date:"2026년 5월 28일",org:"회사명",role:"대표이사",signer:"○ ○ ○"}
     ];
     const lines=[CSV_COLS.join(",")]; sample.forEach(o=>lines.push(CSV_COLS.map(c=>csvEscape(o[c])).join(",")));
     const blob=new Blob(["﻿"+lines.join("\r\n")],{type:"text/csv;charset=utf-8"}); const url=URL.createObjectURL(blob);
-    const a=document.createElement("a"); a.href=url; a.download="AIM_certificate_list_sample.csv"; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1000);
+    const a=document.createElement("a"); a.href=url; a.download="certificate_list_sample.csv"; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1000);
   }
 
   applyVars(); syncControls(); applyOrientation(); renderAll(); setActive(0); savePages();
